@@ -6,11 +6,11 @@ namespace Persistence.Repository
 {
     public class MyRepositoryAsync<T> : RepositoryBase<T>, IRepositoryAsync<T> where T : class
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
         public MyRepositoryAsync(ApplicationDbContext dbContext) : base(dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
         }
     }
 }

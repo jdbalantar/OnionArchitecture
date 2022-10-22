@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -11,7 +12,8 @@ namespace Persistence.Contexts
     {
         private readonly IDateTimeService _dateTime;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDateTimeService dateTime) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDateTimeService dateTime) :
+            base(options)
         {
             _dateTime = dateTime;
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -25,7 +27,6 @@ namespace Persistence.Contexts
             {
                 switch (entry.State)
                 {
-                    
                     case EntityState.Modified:
                         entry.Entity.Created = _dateTime.NowUtc;
                         break;
@@ -34,7 +35,13 @@ namespace Persistence.Contexts
                         break;
                 }
             }
+
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
